@@ -5,7 +5,7 @@ import (
 	"filippo.io/edwards25519/field"
 	"fmt"
 	dsecp256k1 "github.com/decred/dcrd/dcrec/secp256k1/v4"
-	"golang.org/x/crypto/sha3"
+	"crypto/sha256"
 
 	"github.com/athanorlabs/go-dleq/ed25519"
 	"github.com/athanorlabs/go-dleq/secp256k1"
@@ -30,7 +30,7 @@ func hashToCurve(pk types.Point) types.Point {
 func hashToCurveEd25519(pk *ed25519.PointImpl) *ed25519.PointImpl {
 	const safety = 128
 	compressedKey := pk.Encode()
-	hash := sha3.Sum256(compressedKey)
+	hash := sha256.Sum256(compressedKey)
 
 	for i := 0; i < safety; i++ {
 		point, err := new(edwards25519.Point).SetBytes(hash[:])
@@ -40,7 +40,7 @@ func hashToCurveEd25519(pk *ed25519.PointImpl) *ed25519.PointImpl {
 			)
 		}
 
-		hash = sha3.Sum256(hash[:])
+		hash = sha256.Sum256(hash[:])
 	}
 
 	panic("failed to hash ed25519 point to curve")
@@ -55,7 +55,7 @@ func hashToCurveEd25519(pk *ed25519.PointImpl) *ed25519.PointImpl {
 func hashToCurveEd25519Alt(pk *ed25519.PointImpl) *ed25519.PointImpl { //nolint:deadcode,unused
 	const safety = 128
 	compressedKey := pk.Encode()
-	hash := sha3.Sum512(compressedKey)
+	hash := sha256.Sum512(compressedKey)
 
 	for i := 0; i < safety; i++ {
 		x, err := new(field.Element).SetWideBytes(hash[:])
@@ -68,7 +68,7 @@ func hashToCurveEd25519Alt(pk *ed25519.PointImpl) *ed25519.PointImpl { //nolint:
 			return point
 		}
 
-		hash = sha3.Sum512(hash[:])
+		hash = sha256.Sum512(hash[:])
 	}
 
 	panic("failed to hash ed25519 point to curve")
@@ -117,7 +117,7 @@ func decompressYEd25519(x *field.Element) (*ed25519.PointImpl, error) { //nolint
 func hashToCurveSecp256k1(pk *secp256k1.PointImpl) *secp256k1.PointImpl {
 	const safety = 128
 	compressedKey := pk.Encode()
-	hash := sha3.Sum256(compressedKey)
+	hash := sha256.Sum256(compressedKey)
 	fe := &dsecp256k1.FieldVal{}
 	fe.SetBytes(&hash)
 	maybeY := &dsecp256k1.FieldVal{}
@@ -128,7 +128,7 @@ func hashToCurveSecp256k1(pk *secp256k1.PointImpl) *secp256k1.PointImpl {
 			return secp256k1.NewPointFromCoordinates(*fe, *maybeY)
 		}
 
-		hash = sha3.Sum256(hash[:])
+		hash = sha256.Sum256(hash[:])
 		fe.SetBytes(&hash)
 	}
 
