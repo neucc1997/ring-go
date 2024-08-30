@@ -6,12 +6,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"golang.org/x/crypto/sha3"
+	"crypto/sha256"
 )
 
 func testSerializeAndDeserialize(t *testing.T, curve Curve, size, idx int) {
 	privkey := curve.NewRandomScalar()
-	msgHash := sha3.Sum256([]byte("helloworld"))
+	msgHash := sha256.Sum256([]byte("helloworld"))
 
 	keyring, err := NewKeyRing(curve, size, privkey, idx)
 	require.NoError(t, err)
