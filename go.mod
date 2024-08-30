@@ -1,4 +1,4 @@
-module github.com/noot/ring-go
+module github.com/neucc1997/ring-go
 
 go 1.18
 
