@@ -52,27 +52,27 @@ func hashToCurveEd25519(pk *ed25519.PointImpl) *ed25519.PointImpl {
 // this is slightly slower than hashToCurveEd25519.
 // I *think* they're effectively the same security-wise, as this impl hashes to an x-coordinate,
 // and the above hashes to a y-coordinate.
-func hashToCurveEd25519Alt(pk *ed25519.PointImpl) *ed25519.PointImpl { //nolint:deadcode,unused
-	const safety = 128
-	compressedKey := pk.Encode()
-	hash := sha256.Sum512(compressedKey)
+// func hashToCurveEd25519Alt(pk *ed25519.PointImpl) *ed25519.PointImpl { //nolint:deadcode,unused
+// 	const safety = 128
+// 	compressedKey := pk.Encode()
+// 	hash := sha256.Sum512(compressedKey)
 
-	for i := 0; i < safety; i++ {
-		x, err := new(field.Element).SetWideBytes(hash[:])
-		if err != nil {
-			panic(err) // this shouldn't happen
-		}
+// 	for i := 0; i < safety; i++ {
+// 		x, err := new(field.Element).SetWideBytes(hash[:])
+// 		if err != nil {
+// 			panic(err) // this shouldn't happen
+// 		}
 
-		point, err := decompressYEd25519(x)
-		if err == nil {
-			return point
-		}
+// 		point, err := decompressYEd25519(x)
+// 		if err == nil {
+// 			return point
+// 		}
 
-		hash = sha256.Sum512(hash[:])
-	}
+// 		hash = sha256.Sum512(hash[:])
+// 	}
 
-	panic("failed to hash ed25519 point to curve")
-}
+// 	panic("failed to hash ed25519 point to curve")
+// }
 
 // see https://crypto.stackexchange.com/questions/101961/find-ed25519-y-coordinate-from-x-coordinate
 func decompressYEd25519(x *field.Element) (*ed25519.PointImpl, error) { //nolint:unused
