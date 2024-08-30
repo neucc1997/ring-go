@@ -21,12 +21,12 @@ import (
 	"fmt"
 
 	ring "github.com/noot/ring-go"
-	"golang.org/x/crypto/sha3"
+	"crypto/sha256"
 )
 
 func signAndVerify(curve ring.Curve) {
 	privkey := curve.NewRandomScalar()
-	msgHash := sha3.Sum256([]byte("helloworld"))
+	msgHash := sha256.Sum256([]byte("helloworld"))
 
 	// size of the public key ring (anonymity set)
 	const size = 16
