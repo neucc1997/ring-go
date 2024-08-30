@@ -8,11 +8,11 @@ import (
 
 	"github.com/athanorlabs/go-dleq/types"
 	"github.com/stretchr/testify/require"
-	"golang.org/x/crypto/sha3"
+	"crypto/sha256"
 )
 
 var (
-	testMsg = sha3.Sum256([]byte("helloworld"))
+	testMsg = sha256.Sum256([]byte("helloworld"))
 )
 
 func createSigWithCurve(t *testing.T, curve types.Curve, size, idx int) *RingSig {
@@ -163,7 +163,7 @@ func TestVerifyFalse(t *testing.T) {
 
 func TestVerifyWrongMessage(t *testing.T) {
 	sig := createSig(t, 5, 1)
-	fakeMsg := sha3.Sum256([]byte("noot"))
+	fakeMsg := sha256.Sum256([]byte("noot"))
 	require.False(t, sig.Verify(fakeMsg))
 }
 
@@ -171,7 +171,7 @@ func TestLinkabilityTrue(t *testing.T) {
 	curve := Secp256k1()
 	privkey := curve.NewRandomScalar()
 	msg1 := "helloworld"
-	msgHash1 := sha3.Sum256([]byte(msg1))
+	msgHash1 := sha256.Sum256([]byte(msg1))
 
 	keyring1, err := NewKeyRing(curve, 2, privkey, 0)
 	require.NoError(t, err)
@@ -180,7 +180,7 @@ func TestLinkabilityTrue(t *testing.T) {
 	require.NoError(t, err)
 
 	msg2 := "hello world"
-	msgHash2 := sha3.Sum256([]byte(msg2))
+	msgHash2 := sha256.Sum256([]byte(msg2))
 
 	keyring2, err := NewKeyRing(curve, 2, privkey, 0)
 	require.NoError(t, err)
@@ -204,7 +204,7 @@ func TestLinkabilityTrue_imageSmallSubgroup(t *testing.T) {
 	curve := Ed25519()
 	privkey := curve.NewRandomScalar()
 	msg1 := "helloworld"
-	msgHash1 := sha3.Sum256([]byte(msg1))
+	msgHash1 := sha256.Sum256([]byte(msg1))
 
 	keyring1, err := NewKeyRing(curve, 2, privkey, 0)
 	require.NoError(t, err)
@@ -213,7 +213,7 @@ func TestLinkabilityTrue_imageSmallSubgroup(t *testing.T) {
 	require.NoError(t, err)
 
 	msg2 := "hello world"
-	msgHash2 := sha3.Sum256([]byte(msg2))
+	msgHash2 := sha256.Sum256([]byte(msg2))
 
 	keyring2, err := NewKeyRing(curve, 2, privkey, 0)
 	require.NoError(t, err)
@@ -228,7 +228,7 @@ func TestLinkabilityFalse(t *testing.T) {
 	curve := Secp256k1()
 	privkey1 := curve.NewRandomScalar()
 	msg1 := "helloworld"
-	msgHash1 := sha3.Sum256([]byte(msg1))
+	msgHash1 := sha256.Sum256([]byte(msg1))
 
 	keyring1, err := NewKeyRing(curve, 2, privkey1, 0)
 	require.NoError(t, err)
@@ -238,7 +238,7 @@ func TestLinkabilityFalse(t *testing.T) {
 
 	privkey2 := curve.NewRandomScalar()
 	msg2 := "hello world"
-	msgHash2 := sha3.Sum256([]byte(msg2))
+	msgHash2 := sha256.Sum256([]byte(msg2))
 
 	keyring2, err := NewKeyRing(curve, 2, privkey2, 0)
 	require.NoError(t, err)
